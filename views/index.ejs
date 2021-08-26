@@ -7,12 +7,63 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Hello EJS</h1>
+    <h1>Socket.IO trial page</h1>
     <h1><%= title %></h1>
+    <h2>Date</h2>
+    <div id="clock"></div>
+    <h2>Server display</h2>
+    <div id="serverdisp"></div>
+    <button onclick="sendf()">Sending button</button>
+    <button onclick="myFunction()">Click me</button>
+    <div id="demo"></div>
+    <button onclick="myFunctionc()">Click me clear</button>
 </body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js" integrity="sha512-PU5S6BA03fRv1Q5fpwXjg5nlRrgdoguZ74urFInkbABMCENyx5oP3hrDzYMMPh3qdLdknIvrGj3yqZ4JuU7Nag==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
     const socket = io()
+    socket.on('connection',(data)=>{
+        socket.emit("toserver","Hello server from client")
+    })
+    socket.on("hello",(arg)=>{
+        console.log('received:',arg)
+    })
+    socket.on("another",(arg2)=>{
+        order()
+    })
+    
+    socket.on('clock',function(data){
+                $('#clock').html(data.currentDate);
+            })
+    socket.on('serverdisp',(data)=>{
+        $('#serverdisp').html(data.ddd)
+    })
+
+    
+
+    function order(){
+        setInterval(()=>{
+            console.log('I received this order every 1 s.')
+        },1000)
+    }
+
 </script>
+<script>
+    var i =0
+    function sendf(){
+        i++
+        socket.emit('fromclient',i)
+    }
+
+    function myFunction() {
+        
+  document.getElementById("demo").innerHTML = "Hello World";
+}
+function myFunctionc() {
+        
+        document.getElementById("demo").innerHTML = "";
+      }
+</script>
+
 </html>
